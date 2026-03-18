@@ -36,13 +36,13 @@ public class Doctor {
     @Column
     private String bio;
 
-    @Column(columnDefinition = "DOUBLE DEFAULT 0")
+    @Column(columnDefinition = "DOUBLE PRECISION DEFAULT 0")
     private double rating = 0.0;
 
     @Column(columnDefinition = "INT DEFAULT 0")
     private int totalRatings = 0;
 
-    @Column(columnDefinition = "DOUBLE DEFAULT 0")
+    @Column(columnDefinition = "DOUBLE PRECISION DEFAULT 0")
     private double consultationFee = 0.0;
 
     @Column(length = 20)
