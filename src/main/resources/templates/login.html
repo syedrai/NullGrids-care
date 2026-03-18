@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>NullGrids-Care - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); min-height: 100vh; display: flex; align-items: center; }
+        .login-card { border: none; border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.5); overflow: hidden; }
+        .card-left { background: linear-gradient(135deg, #1a73e8, #0d47a1); padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+        .card-right { background: #fff; padding: 40px; }
+        .form-control:focus { border-color: #1a73e8; box-shadow: 0 0 0 0.2rem rgba(26,115,232,0.25); }
+        .btn-login { background: linear-gradient(135deg, #1a73e8, #0d47a1); border: none; padding: 12px; font-size: 16px; border-radius: 10px; }
+        .btn-login:hover { opacity: 0.9; }
+        .security-badge { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 12px; font-size: 12px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card login-card">
+                <div class="row g-0">
+                    <!-- Left Panel -->
+                    <div class="col-md-5 card-left text-white">
+                        <div>
+                            <i class="fas fa-shield-alt fa-3x mb-3"></i>
+                            <h2 class="fw-bold">NullGrids-Care</h2>
+                            <p class="opacity-75 mb-4">Enterprise-grade secure hospital appointment system with multi-role access control.</p>
+                            <div class="security-badge mb-2"><i class="fas fa-lock me-2"></i>BCrypt Password Hashing</div>
+                            <div class="security-badge mb-2"><i class="fas fa-key me-2"></i>JWT Authentication</div>
+                            <div class="security-badge mb-2"><i class="fas fa-user-shield me-2"></i>Role-Based Access Control</div>
+                            <div class="security-badge mb-2"><i class="fas fa-ban me-2"></i>Brute Force Protection</div>
+                            <div class="security-badge"><i class="fas fa-file-alt me-2"></i>Full Audit Logging</div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel -->
+                    <div class="col-md-7 card-right">
+                        <h4 class="fw-bold mb-1">Welcome Back</h4>
+                        <p class="text-muted mb-4">Sign in to your secure account</p>
+
+                        <div th:if="${error}" class="alert alert-danger alert-dismissible">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <span th:text="${error}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <div th:if="${success}" class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span th:text="${success}"></span>
+                        </div>
+
+                        <!-- Spring Security form - CSRF auto-injected by Thymeleaf -->
+                        <form th:action="@{/login}" method="post">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope text-muted"></i></span>
+                                    <input type="email" name="email" class="form-control" placeholder="your@email.com" required autofocus>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock text-muted"></i></span>
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Your password" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePwdBtn">
+                                        <i class="fas fa-eye" id="eyeIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-login btn-primary text-white">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Secure Login
+                                </button>
+                            </div>
+                        </form>
+
+                        <hr class="my-4">
+                        <p class="text-center mb-3">Don't have an account? <a href="/register" class="text-primary fw-semibold">Register as Patient</a></p>
+
+                        <div class="bg-light rounded p-3">
+                            <small class="text-muted d-block fw-semibold mb-1">Test Credentials:</small>
+                            <small class="text-muted d-block">Admin: admin@nullgrids-care.com / Admin@123</small>
+                            <small class="text-muted d-block">Doctor: rajesh@medicare.com / Doctor@123</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.getElementById('togglePwdBtn').addEventListener('click', function() {
+    var p = document.getElementById('password');
+    var i = document.getElementById('eyeIcon');
+    p.type = p.type === 'password' ? 'text' : 'password';
+    i.className = p.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+});
+</script>
+</body>
+</html>

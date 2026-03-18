@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"><title>Patient Profile - Admin</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+  .sidebar{background:linear-gradient(180deg,#1a1a2e,#16213e);min-height:100vh;width:250px;position:fixed;top:0;left:0;}
+  .sidebar a{color:rgba(255,255,255,.8);text-decoration:none;display:block;padding:10px 20px;border-radius:8px;margin:2px 10px;}
+  .sidebar a:hover,.sidebar a.active{background:rgba(255,255,255,.12);color:#fff;}
+  .main-content{margin-left:250px;padding:30px;}
+  .topbar{background:#fff;padding:15px 30px;margin:-30px -30px 30px;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+  .info-card{border:none;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,.08);}
+</style>
+</head>
+<body class="bg-light">
+<div class="sidebar py-4">
+  <div class="text-white text-center mb-4 px-3"><i class="fas fa-shield-alt fa-2x mb-2" style="color:#1a73e8"></i><div class="fw-bold">NullGrids-Care</div><small class="opacity-50">Admin Panel</small></div>
+  <a href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+  <a href="/admin/appointments"><i class="fas fa-calendar-check me-2"></i>Appointments</a>
+  <a href="/admin/doctors"><i class="fas fa-user-md me-2"></i>Doctors</a>
+  <a href="/admin/users" class="active"><i class="fas fa-users me-2"></i>Users</a>
+  <a href="/admin/leaves"><i class="fas fa-plane-departure me-2"></i>Leave Requests</a>
+  <a href="/admin/security-logs"><i class="fas fa-shield-alt me-2"></i>Security Logs</a>
+  <a href="/admin/analytics"><i class="fas fa-chart-bar me-2"></i>Analytics</a>
+  <div style="position:absolute;bottom:20px;width:100%">
+    <form th:action="@{/logout}" method="post" style="margin:0 10px">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+      <button type="submit" style="background:none;border:none;color:rgba(255,255,255,.8);padding:10px;width:100%;text-align:left;border-radius:8px;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='none'">
+        <i class="fas fa-sign-out-alt me-2"></i>Logout
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="topbar d-flex align-items-center gap-3">
+    <a href="/admin/users" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left me-1"></i>Back</a>
+    <h5 class="mb-0 fw-bold"><i class="fas fa-user me-2 text-primary"></i>Patient Profile</h5>
+  </div>
+
+  <div class="row mb-4">
+    <!-- Personal Info -->
+    <div class="col-md-4 mb-4">
+      <div class="card info-card h-100">
+        <div class="card-body text-center py-4">
+          <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width:80px;height:80px;font-size:2rem">
+            <i class="fas fa-user"></i>
+          </div>
+          <h5 class="fw-bold" th:text="${patient.name}"></h5>
+          <span class="badge bg-primary mb-2">PATIENT</span>
+          <div th:if="${patient.accountLocked}" class="badge bg-danger d-block mb-2">Account Locked</div>
+          <div th:unless="${patient.accountLocked}" class="badge bg-success d-block mb-2">Active</div>
+          <hr>
+          <div class="text-start">
+            <p class="mb-1"><i class="fas fa-envelope me-2 text-muted"></i><span th:text="${patient.email}"></span></p>
+            <p class="mb-1"><i class="fas fa-phone me-2 text-muted"></i><span th:text="${patient.phone ?: 'N/A'}"></span></p>
+            <p class="mb-1"><i class="fas fa-birthday-cake me-2 text-muted"></i>Age: <span th:text="${patient.age ?: 'N/A'}"></span></p>
+            <p class="mb-1"><i class="fas fa-venus-mars me-2 text-muted"></i><span th:text="${patient.gender ?: 'N/A'}"></span></p>
+            <p class="mb-1"><i class="fas fa-tint me-2 text-muted"></i>Blood: <span th:text="${patient.bloodGroup ?: 'N/A'}"></span></p>
+            <p class="mb-1"><i class="fas fa-map-marker-alt me-2 text-muted"></i><span th:text="${patient.address ?: 'N/A'}"></span></p>
+            <p class="mb-0"><i class="fas fa-calendar me-2 text-muted"></i>Joined: <small th:text="${patient.createdAt}"></small></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="col-md-8 mb-4">
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <div class="card info-card text-white" style="background:linear-gradient(135deg,#1a73e8,#0d47a1)">
+            <div class="card-body text-center">
+              <i class="fas fa-calendar-check fa-2x mb-2"></i>
+              <h3 th:text="${appointments.size()}">0</h3><p class="mb-0">Total Appointments</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card info-card text-white" style="background:linear-gradient(135deg,#4caf50,#2e7d32)">
+            <div class="card-body text-center">
+              <i class="fas fa-check-circle fa-2x mb-2"></i>
+              <h3 th:text="${completedCount}">0</h3><p class="mb-0">Completed</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card info-card text-white" style="background:linear-gradient(135deg,#ff9800,#e65100)">
+            <div class="card-body text-center">
+              <i class="fas fa-clock fa-2x mb-2"></i>
+              <h3 th:text="${pendingCount}">0</h3><p class="mb-0">Pending</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medical History from appointments -->
+      <div class="card info-card">
+        <div class="card-header bg-white py-3"><h6 class="mb-0 fw-bold"><i class="fas fa-notes-medical me-2 text-danger"></i>Medical History</h6></div>
+        <div class="card-body p-0">
+          <div th:if="${appointments.empty}" class="text-center py-3 text-muted">No medical records yet.</div>
+          <table th:unless="${appointments.empty}" class="table table-sm mb-0">
+            <thead class="table-light"><tr><th>Date</th><th>Doctor</th><th>Reason</th><th>Doctor Notes</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr th:each="a : ${appointments}" th:if="${a.doctorNotes != null and !#strings.isEmpty(a.doctorNotes)}">
+                <td th:text="${a.appointmentDate}"></td>
+                <td th:text="${a.doctor.user.name}"></td>
+                <td th:text="${a.reason}"></td>
+                <td><small th:text="${a.doctorNotes}"></small></td>
+                <td><span class="badge bg-primary" th:text="${a.status}"></span></td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(appointments.?[doctorNotes != null && !#strings.isEmpty(doctorNotes)])}">
+                <td colspan="5" class="text-center text-muted py-2">No doctor notes recorded yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Appointments -->
+  <div class="card info-card">
+    <div class="card-header bg-white py-3"><h6 class="mb-0 fw-bold"><i class="fas fa-calendar-alt me-2 text-primary"></i>All Appointments</h6></div>
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead class="table-dark"><tr><th>#</th><th>Doctor</th><th>Specialization</th><th>Date</th><th>Time</th><th>Reason</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr th:each="a, i : ${appointments}">
+            <td th:text="${i.count}"></td>
+            <td th:text="${a.doctor.user.name}"></td>
+            <td><span class="badge bg-info" th:text="${a.doctor.specialization}"></span></td>
+            <td th:text="${a.appointmentDate}"></td>
+            <td th:text="${a.timeSlot}"></td>
+            <td th:text="${a.reason}"></td>
+            <td><span class="badge"
+                  th:classappend="${a.status.name()=='COMPLETED'}?'bg-primary':
+                                  (${a.status.name()=='CONFIRMED'}?'bg-success':
+                                  (${a.status.name()=='PENDING'}?'bg-warning text-dark':'bg-danger'))"
+                  th:text="${a.status}"></span></td>
+          </tr>
+          <tr th:if="${appointments.empty}"><td colspan="7" class="text-center text-muted py-3">No appointments.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
